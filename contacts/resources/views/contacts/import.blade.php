@@ -36,24 +36,15 @@
                         @enderror
                     </div>
                 </div>
-                <!-- <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Contact Last Name:</strong>
-                        <input type="text" name="last_name" class="form-control" placeholder="Doe">
-                        @error('last_name')
+                        <strong>Provide an email to send notification when import is finished:</strong>
+                        <input type="email" name="email" class="form-control" placeholder="example@gmail.com">
+                        @error('email')
                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="form-group">
-                        <strong>Contact Phone:</strong>
-                        <input type="text" name="phone" class="form-control" placeholder="+91 1122334455">
-                        @error('phone')
-                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div> -->
                 <button type="submit" class="btn btn-primary ml-3">Submit</button>
             </div>
         </form>

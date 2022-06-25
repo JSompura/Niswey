@@ -32,6 +32,7 @@ class importContact implements ShouldQueue
      */
     public function handle()
     {
+        $contactsData = [];
         foreach ($this->contacts as $contact) {
             $validator = Validator::make((array)$contact, [
                 'name' => 'bail|required',
@@ -41,12 +42,13 @@ class importContact implements ShouldQueue
             if ($validator->fails()) {
                 continue;
             } else {
-                $contactObject = new Contacts;
-                $contactObject->name = $contact['name'] ?? '';
-                $contactObject->last_name = $contact['lastName'] ?? '';
-                $contactObject->phone = $contact['phone'] ?? '';
-                $contactObject->save();
+                array_push($contactsData, [
+                    'name' => $contact['name'],
+                    'last_name' => $contact['lastName'] ?? '',
+                    'phone' => $contact['phone'] ?? ''
+                ]);
             }
         }
+        Contacts::insert($contactsData);
     }
 }

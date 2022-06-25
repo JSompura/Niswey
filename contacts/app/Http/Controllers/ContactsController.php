@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Contacts;
 use App\Jobs\importContact;
+use App\Mail\importContacts;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 
 class ContactsController extends Controller
 {
@@ -129,14 +130,22 @@ class ContactsController extends Controller
     public function importFile(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:2048|mimetypes:text/xml'
+            'file' => 'required|file|max:2048|mimetypes:text/xml',
+            'email' => 'required|email'
         ]);
-
         $data = (array)simplexml_load_string(file_get_contents($request->file('file')));
         $chunk = array_chunk($data['contact'], 10);
+        $userMail = $request->get('email');
 
-        foreach ($chunk as $contactData) {
-            importContact::dispatch(json_decode(json_encode($contactData), true));
+        $lastChunk = count($chunk) - 1;
+        foreach ($chunk as $key => $contactData) {
+            if ($lastChunk == $key) {
+                importContact::withChain([
+                    Mail::to($userMail)->queue(new importContacts)
+                ])->dispatch(json_decode(json_encode($contactData), true));
+            } else {
+                importContact::dispatch(json_decode(json_encode($contactData), true));
+            }
         }
         return redirect()->route('contacts.index')
             ->with('success', 'Contacts are being imported');
