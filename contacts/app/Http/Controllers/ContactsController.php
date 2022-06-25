@@ -141,7 +141,7 @@ class ContactsController extends Controller
         foreach ($chunk as $key => $contactData) {
             if ($lastChunk == $key) {
                 importContact::withChain([
-                    Mail::to($userMail)->queue(new importContacts)
+                    Mail::to($userMail)->send(new importContacts)
                 ])->dispatch(json_decode(json_encode($contactData), true));
             } else {
                 importContact::dispatch(json_decode(json_encode($contactData), true));
