@@ -28,6 +28,6 @@ class importContacts extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('contacts.importMail');
+        return $this->subject('Import Status')->view('contacts.importMail');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Contacts;
 use App\Jobs\importContact;
+use App\Jobs\sendMail;
 use App\Mail\importContacts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -141,7 +142,7 @@ class ContactsController extends Controller
         foreach ($chunk as $key => $contactData) {
             if ($lastChunk == $key) {
                 importContact::withChain([
-                    Mail::to($userMail)->send(new importContacts)
+                    new sendMail($userMail)
                 ])->dispatch(json_decode(json_encode($contactData), true));
             } else {
                 importContact::dispatch(json_decode(json_encode($contactData), true));
